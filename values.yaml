@@ -29,8 +29,6 @@ nodeSelector: {}
 
 tolerations: []
 
-affinity: {}
-
 ## Extra environment variables that will be pass onto connector pod
 ##
 ## env:
@@ -49,7 +47,7 @@ icmpSupport:
 connector:
   logLevel: "error"
   dnsServer:
-  replicas: 5
+  replicas: 2
 
 twingate:
   apiKey:
