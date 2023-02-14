@@ -49,6 +49,7 @@ icmpSupport:
 connector:
   logLevel: "error"
   dnsServer:
+  replicas: 5
 
 twingate:
   apiKey:

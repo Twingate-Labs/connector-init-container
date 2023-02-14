@@ -5,7 +5,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: {{ include "cn.fullname" . }}
-    namespace: default
+    namespace: {{.Release.Namespace}}
 roleRef:
   kind: ClusterRole
   name: cluster-admin
