@@ -85,7 +85,6 @@ spec:
             wget "https://github.com/Twingate-Labs/tg-cli/releases/latest/download/cli_linux_x86_64.zip";
             unzip cli_linux_x86_64.zip;
             chmod +x ./tg;
-            ./tg resource list;
             curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl";
             install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl;
             kubectl get pods -A;

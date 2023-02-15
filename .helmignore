@@ -20,3 +20,6 @@
 .idea/
 *.tmproj
 .vscode/
+/.tg
+/connector-init-container.iml
+/Dockerfile
