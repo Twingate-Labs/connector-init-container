@@ -1,5 +1,7 @@
 # Twingate Connector Helm Chart
+**This is a prototype, not for production use. See [here](https://github.com/Twingate/helm-charts) for Twingate production Helm chart.**
 
+## How to Use
 Command to Run:
 ```helm upgrade --install twingate-connector connector-init-container -n default --set twingate.apiKey="xxxx" --set twingate.account="xxxx.twingate.com" --set twingate.networkName="kube_test2"  --set connector.replicas=4 --values connector-init-container/values.yaml```
 
