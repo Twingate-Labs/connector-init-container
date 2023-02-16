@@ -69,7 +69,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
       initContainers:
         - name: "connector-provision"
-          image: ubuntu:latest
+          image: ghcr.io/twingate-labs/connector-init-container:latest
           envFrom:
             - secretRef:
                 name: {{ include "cn.fullname" . }}
@@ -79,24 +79,21 @@ spec:
               value: {{.Values.twingate.account }}
           command: [ "/bin/bash", "-c" ]
           args:
-          -
-            apt-get update;
-            apt-get install wget unzip curl jq -y;
-            wget "https://github.com/Twingate-Labs/tg-cli/releases/latest/download/cli_linux_x86_64.zip";
-            unzip cli_linux_x86_64.zip;
-            chmod +x ./tg;
-            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl";
-            install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl;
-            kubectl get pods -A;
-            new_connector=$(./tg connector create {{.Values.twingate.networkName }});
-            access_token=$(echo $new_connector | sed -e 's/.*ACCESS_TOKEN\=\(.*\)\ .*/\1/');
-            refresh_token="${new_connector##*REFRESH_TOKEN=}";
-            kubectl get secret {{ include "cn.fullname" . }} -o json | jq --arg access_token_64 "$(echo -n $access_token | base64)" '.data["TWINGATE_ACCESS_TOKEN"]=$access_token_64' | kubectl apply -f -;
-            kubectl get secret {{ include "cn.fullname" . }} -o json | jq --arg refresh_token_64 "$(echo -n $refresh_token | base64)" '.data["TWINGATE_REFRESH_TOKEN"]=$refresh_token_64' | kubectl apply -f -;
-            kubectl get secret {{ include "cn.fullname" . }} -o json | jq --arg test "$(echo -n $refresh_token | base64)" '.data["TEST"]=$test' | kubectl apply -f -;
-            echo $new_connector;
-            echo $access_token;
-            echo $refresh_token;
+            - |
+              offline_connectors=$(./tg connector list -o json | jq -c '[ .[] | select( .remoteNetworkLabel=="{{.Values.twingate.networkName }}") ]' |  jq -c '[ .[] | select( .state | contains("Offline")) ]');
+              if [[ $offline_connectors == "[]" ]]; then
+                new_connector=$(./tg connector create {{.Values.twingate.networkName }})
+                access_token=$(echo $new_connector | sed -e 's/.*ACCESS_TOKEN\=\(.*\)\ .*/\1/')
+                refresh_token="${new_connector##*REFRESH_TOKEN=}"
+              else
+                connector_id=$(echo $offline_connectors | jq -r '.[0].id')
+                connector_tokens=$(./tg connector generate_token $connector_id)
+                access_token=$(echo $connector_tokens | sed -e 's/.*ACCESS_TOKEN\=\(.*\)\ .*/\1/')
+                refresh_token="${connector_tokens##*REFRESH_TOKEN=}"
+              fi
+              kubectl get secret {{ include "cn.fullname" . }} -o json | jq --arg access_token_64 "$(echo -n $access_token | base64)" '.data["TWINGATE_ACCESS_TOKEN"]=$access_token_64' | kubectl apply -f -
+              kubectl get secret {{ include "cn.fullname" . }} -o json | jq --arg refresh_token_64 "$(echo -n $refresh_token | base64)" '.data["TWINGATE_REFRESH_TOKEN"]=$refresh_token_64' | kubectl apply -f -
+              sleep 5
     {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
