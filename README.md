@@ -16,12 +16,13 @@
 #### Deploy to Kubernetes Cluster
 ```helm upgrade --install {statefulSet_name} twingate-connector-init-container/connector -n {namespace} --set twingate.apiKey="{twingate_api_key}" --set twingate.account="{twingate_tenant_name}.twingate.com" --set twingate.networkName="{remote_network_name}"  --set connector.replicas={number_of_replicas} --values connector-init-container/values.yaml```
 
-deployment_name: the name of the kubernetes statefulSet, e.g. twingate-connector
-namespace: kubernetes namespace to deploy the statefulSet, e.g. default
-twingate_api_key: the value of the twingate api key
-twingate_tenant_name: the twingate tenant name
-remote_network_name: the Twingate remote network name
-number_of_replicas: number of replicas to deploy, each replica is a connector
+* deployment_name: the name of the kubernetes statefulSet, e.g. twingate-connector
+* namespace: kubernetes namespace to deploy the statefulSet, e.g. default
+* twingate_api_key: the value of the twingate api key
+* twingate_tenant_name: the twingate tenant name
+* remote_network_name: the Twingate remote network name
+
+* number_of_replicas: number of replicas to deploy, each replica is a connector
 
 
 #### Scaling
