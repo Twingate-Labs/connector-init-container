@@ -10,11 +10,11 @@
 ## How to Use
 1. Create a new Twingate API key (read, write and provision), see [here](https://www.twingate.com/docs/api-overview/#getting-started)
 2. Create a Twingate Remote Network if not already has one
-3. Clone the project `git clone https://github.com/Twingate-Labs/connector-init-container.git`
+3. Install Helm repo `helm repo add twingate-connector-init-container https://twingate-labs.github.io/connector-init-container/`
 
 
 #### Deploy to Kubernetes Cluster
-```helm upgrade --install {statefulSet_name} connector-init-container -n {namespace} --set twingate.apiKey="{twingate_api_key}" --set twingate.account="{twingate_tenant_name}.twingate.com" --set twingate.networkName="{remote_network_name}"  --set connector.replicas={number_of_replicas} --values connector-init-container/values.yaml```
+```helm upgrade --install {statefulSet_name} twingate-connector-init-container/connector -n {namespace} --set twingate.apiKey="{twingate_api_key}" --set twingate.account="{twingate_tenant_name}.twingate.com" --set twingate.networkName="{remote_network_name}"  --set connector.replicas={number_of_replicas} --values connector-init-container/values.yaml```
 
 deployment_name: the name of the kubernetes statefulSet, e.g. twingate-connector
 namespace: kubernetes namespace to deploy the statefulSet, e.g. default
@@ -29,7 +29,7 @@ To scale up or down, simply change the value of `number_of_replicas` with the co
 ``` 
 kubectl scale statefulset {statefulSet_name} --replicas={number_of_replicas}
 Or
-helm upgrade --install {statefulSet_name} connector-init-container -n {namespace} --set twingate.apiKey="{twingate_api_key}" --set twingate.account="{twingate_tenant_name}.twingate.com" --set twingate.networkName="{remote_network_name}"  --set connector.replicas={number_of_replicas} --values connector-init-container/values.yaml
+helm upgrade --install {statefulSet_name} twingate-connector-init-container/connector -n {namespace} --set twingate.apiKey="{twingate_api_key}" --set twingate.account="{twingate_tenant_name}.twingate.com" --set twingate.networkName="{remote_network_name}"  --set connector.replicas={number_of_replicas} --values connector-init-container/values.yaml
 ```
 
 ## Summary
@@ -52,3 +52,7 @@ helm upgrade --install {statefulSet_name} connector-init-container -n {namespace
 2. Role is set as cluster admin, which is not ideal
    1. Cannot limit role access at the moment, as we are doing kubectl apply
    2. Can be improved if needed
+
+
+## Uninstall
+```helm uninstall {statefulSet_name}```
