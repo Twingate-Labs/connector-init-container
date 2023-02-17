@@ -100,8 +100,10 @@ spec:
       {{- end }}
       affinity:
         podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            podAffinityTerm:
+              labelSelector:
                 matchExpressions:
                   - key: app.kubernetes.io/instance
                     operator: In
