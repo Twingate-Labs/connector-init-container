@@ -21,7 +21,6 @@
 * twingate_api_key: the value of the twingate api key
 * twingate_tenant_name: the twingate tenant name
 * remote_network_name: the Twingate remote network name
-
 * number_of_replicas: number of replicas to deploy, each replica is a connector
 
 
