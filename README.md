@@ -32,7 +32,7 @@ Or
 helm upgrade --install {statefulSet_name} twingate-connector-init-container/connector -n {namespace} --set twingate.apiKey="{twingate_api_key}" --set twingate.account="{twingate_tenant_name}.twingate.com" --set twingate.networkName="{remote_network_name}"  --set connector.replicas={number_of_replicas} --values connector-init-container/values.yaml
 ```
 
-Note: downscaling connector could cause the Twignate client to be disconnected.
+Note: downscaling connector would cause the disconnection between the Twignate client and removed connector.
 
 ## Summary
 1. Init Container is released on git
